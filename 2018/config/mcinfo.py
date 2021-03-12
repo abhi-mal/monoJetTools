@@ -26,11 +26,12 @@ filemap = {
     "ZJets":  ["postZ100to200","postZ200to400","postZ400to600","postZ600to800","postZ800to1200","postZ1200to2500","postZ2500toInf"],
     "WJets":  ["postW70to100","postW100to200","postW200to400","postW400to600","postW600to800","postW800to1200","postW1200to2500","postW2500toInf"],
     "DYJets": ["postDY70to100","postDY100to200","postDY200to400","postDY400to600","postDY600to800","postDY800to1200","postDY1200to2500","postDY2500toInf"],
-    "GJets":  ["postGJets40to100","postGJets100to200","postGJets200to400","postGJets400to600","postGJets600toInf"],
+#    "GJets":  ["postGJets40to100","postGJets100to200","postGJets200to400","postGJets400to600","postGJets600toInf"],
     "TTJets": ["postTTJetsFXFX","postST_s_4f","postST_t_antitop_4f","postST_tW_top_5f","postST_tW_antitop_5f","postST_t_top_4f"],
     "DiBoson":["postWW","postWWTo2L2Nu","postWWTo4Q","postWWToLNuQQ","postWZ","postZZ"],
     "QCD":    ["postQCD100to200","postQCD200to300","postQCD300to500","postQCD500to700","postQCD700to1000","postQCD1000to1500","postQCD1500to2000","postQCD2000toInf"],
-    "G-NLO": ["postG-NLO100to250","postG-NLO250to400","postG-NLO400to650","postG-NLO650toInf"]
+    "GJets": ["postG-NLO100to250","postG-NLO250to400","postG-NLO400to650","postG-NLO650toInf"]
+#    "G-NLO": ["postG-NLO100to250","postG-NLO250to400","postG-NLO400to650","postG-NLO650toInf"]
 }
 
 nlomap = {
@@ -93,8 +94,8 @@ xsec = {
 "postGJets600toInf":8.492e+01,
 
 "postG-NLO100to250":1.183e+03,
-"postG-NLO250to400":2.583e+01,
-"postG-NLO400to650":3.149e+00,
+"postG-NLO250to400":2.609e+01,#2.583e+01,
+"postG-NLO400to650":3.148e+00,#3.149e+00,
 "postG-NLO650toInf":2.887e-01,
     
 "postTTJetsFXFX":7.503e+02,

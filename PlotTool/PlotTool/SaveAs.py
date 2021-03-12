@@ -6,7 +6,7 @@ Change basepath for all output directories in this script
 from Parser import parser
 import os
 
-basepath = "/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoJet/"
+basepath = "/afs/hep.wisc.edu/home/mallampalli/public_html/Analysis/MonoJet/"
 
 group = parser.add_group(__file__,__doc__,"Script")
 group.add_argument("--basepath",help="Specify basepath directory to save file in (default: %s)"%basepath,default=basepath)

@@ -34,11 +34,16 @@ def GetProcessPSW(self,nuisance):
     self.nuisances[nuisance] = Nuisance(self.process,nuisance,up,dn,self.histo,type="abs")
     return self.nuisances[nuisance]
 def GetlnNShape(self,nuisance):
+    #print("I am in")
     if "recoil" in self.variable.variable:
         var = "recoil"
     if "ChNemPtFrac" in self.variable.variable:
         var = "chnemptfrac"
-        
+    print("*********")
+    print(self.variable.variable)
+    var = self.variable.variable.split("_")[0]
+    print(var)
+    #input()        
     if "lnn" not in nuisfiles:
         rootdir = GetRootFiles()
         nuisfiles["lnn"] = TFile("%s/sys_shape/%s/shape_lnn_sys.root"%(rootdir,var))
@@ -53,6 +58,8 @@ def GetlnNShape(self,nuisance):
             return up,dn
         upsf = tdir.Get("%s_sysUp"%self.process)
         dnsf = tdir.Get("%s_sysDown"%self.process)
+        #print(type(upsf))
+        #print(type(dnsf))
         up.Multiply(upsf)
         dn.Multiply(dnsf)
         return up,dn
@@ -64,13 +71,21 @@ def GetTheoryShape(self,nuisance):
         var = "recoil"
     if "ChNemPtFrac" in self.variable.variable:
         var = "chnemptfrac"
-        
+    print("*********")
+    print(self.variable.variable)
+    var = self.variable.variable.split("_")[0]
+    print(var)   
+    #input()
     if "theory" not in nuisfiles:
+        print("getting theory")
         rootdir = GetRootFiles()
         nuisfiles["theory"] = TFile("%s/sys_shape/%s/shape_theory_sys.root"%(rootdir,var))
+        print(type(nuisfiles["theory"]))
     dirmap = {"SignalRegion":"sr","DoubleEleCR":"ze","DoubleMuCR":"zm","SingleEleCR":"we","SingleMuCR":"wm","GammaCR":"ga"}
     def getTheory():
         tfile = nuisfiles["theory"]
+        print(type(tfile))
+        
         tdir = tfile.GetDirectory(dirmap[self.region])
         name = "%s_%s_%s"%(self.name,self.variable.base,nuisance)
         up = self.histo.Clone("%sUp"%name)
@@ -79,11 +94,18 @@ def GetTheoryShape(self,nuisance):
             return up,dn
         upsf = tdir.Get("%s_%sUp"%(self.process,nuisance.replace("THEORY_","")))
         dnsf = tdir.Get("%s_%sDown"%(self.process,nuisance.replace("THEORY_","")))
+        #print("---------")
+        #print("%s_%sUp"%(self.process,nuisance.replace("THEORY_","")))
+        #print("%s_%sDown"%(self.process,nuisance.replace("THEORY_","")))
+        #print(type(upsf))
+        #print(type(dnsf))
+        #print("---------")
         up.Multiply(upsf)
         dn.Multiply(dnsf)
         return up,dn
     up,dn = getTheory()
     self.nuisances[nuisance] = Nuisance(self.process,nuisance,up,dn,self.histo,type="abs")
+    #print("get theory nuisance name= %s"%self.nuisances[nuisance].name)
     return self.nuisances[nuisance]
 def MakeDiff(self):
     nbins = self.norm.GetNbinsX()
@@ -141,6 +163,13 @@ def AddDiffNuisances(nuisances,up,dn,norm):
             continue
         up[ibin] = 1 + TMath.Sqrt( sum( (nuisance.up[ibin]-1 )**2 for nuisance in nuisances) )
         dn[ibin] = 1 - TMath.Sqrt( sum( (nuisance.dn[ibin]-1 )**2 for nuisance in nuisances) )
+        #print(nuisances)
+        #print(len(nuisances))
+        #for nuisance in nuisances:
+        #      print("printing %s up[ibin]"%nuisance.name)
+        #      print(nuisance.up[ibin])
+        #      print("*****")
+        #print("ibin=%d,up[ibin]=%d"%(ibin,up[ibin]))
 def GetNuisanceList(tfile,dirname):
     tfile.cd(dirname)
     shapelist = [ key.GetName().replace('Up','') for key in gDirectory.GetListOfKeys() if 'Up' in key.GetName() ]

@@ -315,6 +315,7 @@ class Region(object):
         sumofbkg.variable = self.variable
         sumofbkg.process = MCOrderMap[self.region][0]
         self.processes['SumOfBkg'] = sumofbkg
+        print(self.__class__.__name__)
         return self['SumOfBkg']
     def addUnc(self,nuisance,show=False):
         for process in self: process.addUnc(nuisance,show)

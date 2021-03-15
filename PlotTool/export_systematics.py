@@ -2,7 +2,7 @@
 
 """
 Export systematics shape for quick systematics bands in data/mc plots
-Usage: python PlotTool/export_systematics.py variable output_file.root
+Usage: python PlotTool/export_systematics.py variable output_lnN_file.root output_theory_file.root
 """
 
 from PlotTool import *
@@ -19,10 +19,11 @@ group = parser.add_group(__file__,__doc__,"Script")
 parser.parse_args()
 
 variable = parser.args.argv[0]
-output = TFile(parser.args.argv[1],"recreate")
-
-rmap = {"SignalRegion":"sr","SingleEleCR":"we","SingleMuCR":"wm","DoubleEleCR":"ze","DoubleMuCR":"zm","GammaCR":"ga"}
-regions = { rmap[region]:Region(path=region,autovar=0,show=False) for region in rmap }
+output_lnN = TFile(parser.args.argv[1],"recreate")
+output_theory = TFile(parser.args.argv[2],"recreate")
+rmap = {"SignalRegion":"sr"}#,"SingleEleCR":"we","SingleMuCR":"wm","DoubleEleCR":"ze","DoubleMuCR":"zm","GammaCR":"ga"}
+#regions = { rmap[region]:Region(path=region,autovar=0,show=False) for region in rmap }
+regions = { rmap[region]:Region(autovar=True) for region in rmap }
 class lnN:
     def __init__(self,name,valuemap):
         self.name = name
@@ -143,41 +144,46 @@ lnNlist = [
     lnN("zll_Norm13TeV",{("we","wm"):{"DYJets":1.2}})
 ]
 
-majorbkg = ["ZJets","DYJets","WJets","GJets"]
+allbkg = ["ZJets","WJets","DYJets","GJets","TTJets","DiBoson","QCD"] #majorbkg = ["ZJets","DYJets","WJets","GJets"] adding all backgrounds
 # shapeList = ["PSW_isrCon","PSW_fsrCon"]
 shapeList = ["QCD_Scale","QCD_Shape","QCD_Proc","QCD_EWK_Mix","NNLO_Miss","NNLO_Sud","NNLO_EWK"]
 
-def export_region(region,output):
+def export_region(region,output_lnN,output_theory):
     print "Exporting",region.region
     region.initiate(variable)
-    tdir = output.mkdir(rmap[region.region]); tdir.cd()
+    tdir_lnN_file = output_lnN.mkdir(rmap[region.region])#; tdir.cd()
+    tdir_theory_file = output_theory.mkdir(rmap[region.region])#; tdir.cd()
     def export_process(process):
         print "\tExporting",process.name
         unclist = []
         for lnn in lnNlist:
             name,value = lnn.get(process.process,rmap[process.region],process.year)
             if not name: continue
+            print(value)
             value -= 1
             ConstantNuisance(process,name,value)
             unclist.append(name)
-        # process.fullUnc(unclist,show=False)
-        # up = process.nuisances["Total"].up.Clone("%s_%sUp"%(process.process,"sys"))
-        # dn = process.nuisances["Total"].dn.Clone("%s_%sDown"%(process.process,"sys"))
+        process.fullUnc(unclist,show=False)
+        up = process.nuisances["Total"].up.Clone("%s_%sUp"%(process.process,"sys"))
+        dn = process.nuisances["Total"].dn.Clone("%s_%sDown"%(process.process,"sys"))
         
-        # tdir.cd()
-        # up.Write()
-        # dn.Write()
+        tdir_lnN_file.cd()
+        up.Write()
+        dn.Write()
         
 
-        if process.process in majorbkg:
+        if process.process in allbkg:
             for shape in shapeList:
+                #print("****")
+                #print(process.process)
+                #print("****")
                 process.addUnc(shape)
                 unclist.append(shape)
         
                 up = process.nuisances[shape].up.Clone("%s_%sUp"%(process.process,shape))
                 dn = process.nuisances[shape].dn.Clone("%s_%sDown"%(process.process,shape))
                 
-                tdir.cd()
+                tdir_theory_file.cd()
                 up.Write()
                 dn.Write()
 
@@ -185,6 +191,6 @@ def export_region(region,output):
         if process.proctype != "bkg": continue
         export_process(process)
 
-for region in regions.values(): export_region(region,output) 
+for region in regions.values(): export_region(region,output_lnN,output_theory) 
             
 

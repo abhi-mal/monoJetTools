@@ -8,7 +8,7 @@ Refer to PlotTool/README.md for advance uses
 
 from PlotTool import *
 from ROOT import *
-
+from ROOT import TFile
 import os
 import sys
 import re
@@ -58,7 +58,28 @@ def plotVariable(samples,variable,initiate=True,blinded=False):
     #c.SetLeftMargin(0.15);
     #c.SetLogy();
     #c.cd();
-
+    ##### to solve Signal_region QCD_leading_Jet_disagreement
+    ### step0: Get the distributions
+#    my_file = TFile( 'QCD_leading_jet_distributions.root', 'UPDATE' )
+#    subNum = my_file.mkdir("recoil_250_cut")
+#    subNum.cd()
+#    samples['QCD'].histo.Write("%s_recoil_250_cut"%variable)
+#    subDen = my_file.mkdir("recoil_100_cut")
+#    subDen.cd()
+#    samples['QCD'].histo.Write("%s_recoil_100_cut"%variable)
+    ### step1 : Get the SF: see get_QCD_SF_leading_jet.py
+    ### step2: Apply the SF
+    if "j1" in variable and samples.region=="SignalRegion" : #leading jet variables
+                  #leading_jet_var_hist = samples['QCD'].histo
+                  #N_events_250_by_N_events_100_SF = 0.007088 #1.
+                  #Scale it
+                  #leading_jet_var_hist.Scale(N_events_250_by_N_events_100_SF, "nosw2")
+        #          samples['QCD'].histo = leading_jet_var_hist
+                 # The above leads to huge statistical_error
+            infile = TFile( "QCD_leading_jet_distributions.root","r" )
+            leading_jet_var_hist = infile.Get("scaled_QCD_dis")
+            samples['QCD'].histo = leading_jet_var_hist
+    #####
     if not blinded:
         pad1 = TPad("pad1","pad1",0.01,0.25,0.99,0.99);
         pad1.SetBottomMargin(0.);
@@ -155,19 +176,30 @@ def plotVariable(samples,variable,initiate=True,blinded=False):
         statband.label = "stat"
         UncBandStyle(statband)
         bandlist.append(statband)
+        print(type(samples.variable.variable))
+        if (1==1):#"recoil" in samples.variable.variable:
+           # unclist = unclist + ["theory_sys"] #["NNLO_EWK","NNLO_Sud","NNLO_Miss"] + ["QCD_Scale","QCD_Proc","QCD_Shape","QCD_EWK_Mix"]
+            unclist = unclist + ["lnn_sys"]
+            other_sys_band = samples.getUncBand(unclist)
+            other_sys_band.label = bandlist[-1].label + "#otimes lnN"
+            UncBandStyle(other_sys_band,46)
+            bandlist.append(other_sys_band)
 
-        if "ChNemPtFrac_" in samples.variable.variable:
-            unclist = unclist + ["theory_sys"] #["NNLO_EWK","NNLO_Sud","NNLO_Miss"] + ["QCD_Scale","QCD_Proc","QCD_Shape","QCD_EWK_Mix"]
+            theory_sys = ["NNLO_EWK","NNLO_Sud","NNLO_Miss"] + ["QCD_Scale","QCD_Proc","QCD_Shape","QCD_EWK_Mix"]
+            theory_sys = ["THEORY_" + s for s in theory_sys]
+            print(theory_sys)
+            unclist = unclist + theory_sys
+            print(unclist)
             theoryband = samples.getUncBand(unclist)
             theoryband.label = bandlist[-1].label + " #otimes theory"
             UncBandStyle(theoryband,9)
-            bandlist.append(theoryband)
-
-            unclist = unclist + ["PSW_isrCon","PSW_fsrCon"]
-            pswband = samples.getUncBand(unclist)
-            pswband.label = bandlist[-1].label + " #otimes psw"
-            UncBandStyle(pswband,37)
-            bandlist.append(pswband)
+            bandlist.append(theoryband) 
+      
+       #     unclist = unclist + ["PSW_isrCon","PSW_fsrCon"]
+       #     pswband = samples.getUncBand(unclist)
+       #     pswband.label = bandlist[-1].label + " #otimes psw"
+       #     UncBandStyle(pswband,37)
+       #     bandlist.append(pswband)
         ratio_leg.SetNColumns(len(bandlist))
         for band in bandlist: ratio_leg.AddEntry(band,band.label,"f")
         for band in reversed(bandlist): band.Draw("2same")

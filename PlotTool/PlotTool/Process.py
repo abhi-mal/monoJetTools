@@ -194,13 +194,16 @@ class Process:
             else:                  self.histo.Add(subprocess.histo.Clone())
     def addUnc(self,nuisance,show=False):
         if self.proctype == 'data': return
+
         if "PSW" in nuisance:
             GetProcessPSW(self,nuisance)
             return
         if "lnn_sys" in nuisance:
+            nuisance = nuisance.replace("_lnn_sys","")
             GetlnNShape(self,nuisance)
             return
         if "THEORY" in nuisance:
+            nuisance = nuisance.replace("THEORY_","")
             GetTheoryShape(self,nuisance)
             return
         if nuisance in self.nuisances: return
@@ -211,12 +214,15 @@ class Process:
         dn = self.histo.Clone("%s_%s_%sDown" % (self.name,self.variable.base,nuisance)); dn.Reset()
         AddLikeNuisances([subprocess.nuisances[nuisance] for subprocess in self if nuisance in subprocess.nuisances],up,dn,self.histo)
         self.nuisances[nuisance] = Nuisance(self.process,nuisance,up,dn,self.histo)
+
         if show: print self.nuisances[nuisance]
     def fullUnc(self,unclist,show=True):
         if self.proctype == 'data': return
         for nuisance in unclist: self.addUnc(nuisance)
         up = self.histo.Clone('%s_%s_TotalUp' % (self.name,self.variable.base));  up.Reset()
         dn = self.histo.Clone('%s_%s_TotalDown' % (self.name,self.variable.base)); dn.Reset()
+        #print("adding Diff nuisances")
+        unclist = [nuisance.replace("THEORY_","") for nuisance in unclist]
         AddDiffNuisances([self.nuisances[nuisance] for nuisance in unclist if nuisance in self.nuisances],up,dn,self.histo)
         self.nuisances['Total'] = Nuisance(self.process,'Total',up,dn,self.histo)
 

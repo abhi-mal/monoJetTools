@@ -73,9 +73,13 @@ def plotVariable(samples,variable,initiate=True,blinded=False):
                   #leading_jet_var_hist = samples['QCD'].histo
                   #N_events_250_by_N_events_100_SF = 0.007088 #1.
                   #Scale it
+                  #leading_jet_var_hist.Scale(N_events_250_by_N_events_100_SF)
+                  #samples['QCD'].histo = leading_jet_var_hist 
+                  #samples['QCD'].histo.Write("scaled_QCD_dis")
+                  #
                   #leading_jet_var_hist.Scale(N_events_250_by_N_events_100_SF, "nosw2")
-        #          samples['QCD'].histo = leading_jet_var_hist
-                 # The above leads to huge statistical_error
+                  #samples['QCD'].histo = leading_jet_var_hist
+
             infile = TFile( "QCD_leading_jet_distributions.root","r" )
             leading_jet_var_hist = infile.Get("scaled_QCD_dis")
             samples['QCD'].histo = leading_jet_var_hist

@@ -206,6 +206,10 @@ class Process:
             nuisance = nuisance.replace("THEORY_","")
             GetTheoryShape(self,nuisance)
             return
+        if "EXP" in nuisance:
+            nuisance = nuisance.replace("EXP_","")
+            GetExpShape(self,nuisance)
+            return
         if nuisance in self.nuisances: return
         for subprocess in self:
             subprocess.addUnc(nuisance)
@@ -222,7 +226,7 @@ class Process:
         up = self.histo.Clone('%s_%s_TotalUp' % (self.name,self.variable.base));  up.Reset()
         dn = self.histo.Clone('%s_%s_TotalDown' % (self.name,self.variable.base)); dn.Reset()
         #print("adding Diff nuisances")
-        unclist = [nuisance.replace("THEORY_","") for nuisance in unclist]
+        unclist = [nuisance.replace("THEORY_","").replace("EXP_","") for nuisance in unclist]
         AddDiffNuisances([self.nuisances[nuisance] for nuisance in unclist if nuisance in self.nuisances],up,dn,self.histo)
         self.nuisances['Total'] = Nuisance(self.process,'Total',up,dn,self.histo)
 

@@ -69,9 +69,9 @@ def plotVariable(samples,variable,initiate=True,blinded=False):
 #    samples['QCD'].histo.Write("%s_recoil_100_cut"%variable)
     ### step1 : Get the SF: see get_QCD_SF_leading_jet.py
     ### step2: Apply the SF
-    if "j1" in variable and samples.region=="SignalRegion" : #leading jet variables
+#    if "j1" in variable and samples.region=="SignalRegion" : #leading jet variables and recoil
                   #leading_jet_var_hist = samples['QCD'].histo
-                  #N_events_250_by_N_events_100_SF = 0.007088 #1.
+                  #N_events_250_by_N_events_100_SF = #j1Eta_GJets_NLO =0.138926 #j1pT_GJets_NLO=0.112250 #j1Eta_QCD=0.008857#j1pT_QCD=0.007088 #1
                   #Scale it
                   #leading_jet_var_hist.Scale(N_events_250_by_N_events_100_SF)
                   #samples['QCD'].histo = leading_jet_var_hist 
@@ -80,9 +80,18 @@ def plotVariable(samples,variable,initiate=True,blinded=False):
                   #leading_jet_var_hist.Scale(N_events_250_by_N_events_100_SF, "nosw2")
                   #samples['QCD'].histo = leading_jet_var_hist
 
-            infile = TFile( "QCD_leading_jet_distributions.root","r" )
-            leading_jet_var_hist = infile.Get("scaled_QCD_dis")
-            samples['QCD'].histo = leading_jet_var_hist
+#            infile_QCD = TFile( "QCD_leading_jet_distributions.root","r" )
+#            leading_jet_var_hist_QCD = infile_QCD.Get("scaled_QCD_dis")
+#            samples['QCD'].histo = leading_jet_var_hist_QCD
+#            infile_GJets = TFile("GJets_leading_jet_distributions.root","r")
+#            leading_jet_var_hist_GJets = infile_GJets.Get("scaled_GJets_dis")
+#            samples['GJets'].histo = leading_jet_var_hist_GJets
+###applying_event_level_sf 
+#            infile_QCD = TFile( "QCD_event_level_sf_applied.root","r" )
+#            leading_jet_var_hist_QCD = infile_QCD.Get("sf_from_j1pT/%s_recoil_250_cut_scaled"%variable)
+#            leading_jet_var_hist_QCD = infile_QCD.Get("sf_from_j1Eta/%s_recoil_250_cut_scaled"%variable)
+#            samples['QCD'].histo = leading_jet_var_hist_QCD
+
     #####
     if not blinded:
         pad1 = TPad("pad1","pad1",0.01,0.25,0.99,0.99);
@@ -198,6 +207,17 @@ def plotVariable(samples,variable,initiate=True,blinded=False):
             theoryband.label = bandlist[-1].label + " #otimes theory"
             UncBandStyle(theoryband,9)
             bandlist.append(theoryband) 
+            
+            exp_sys = ["JER","JES"]
+            exp_sys = ["EXP_" + s for s in exp_sys]
+            print(exp_sys)
+            unclist = unclist + exp_sys
+            print(unclist)
+            expband = samples.getUncBand(unclist)
+            expband.label = bandlist[-1].label + " #otimes JEC"
+            UncBandStyle(expband,30)
+            bandlist.append(expband)
+            
       
        #     unclist = unclist + ["PSW_isrCon","PSW_fsrCon"]
        #     pswband = samples.getUncBand(unclist)

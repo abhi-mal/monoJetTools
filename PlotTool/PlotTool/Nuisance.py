@@ -107,6 +107,47 @@ def GetTheoryShape(self,nuisance):
     self.nuisances[nuisance] = Nuisance(self.process,nuisance,up,dn,self.histo,type="abs")
     #print("get theory nuisance name= %s"%self.nuisances[nuisance].name)
     return self.nuisances[nuisance]
+def GetExpShape(self,nuisance):
+    if "recoil" in self.variable.variable:
+        var = "recoil"
+    if "ChNemPtFrac" in self.variable.variable:
+        var = "chnemptfrac"
+    print("*********")
+    print(self.variable.variable)
+    var = self.variable.variable.split("_")[0]
+    print(var)   
+    #input()
+    if "exp" not in nuisfiles:
+        print("getting experiment systematics")
+        rootdir = GetRootFiles()
+        nuisfiles["exp"] = TFile("%s/sys_shape/%s/shape_exp_sys.root"%(rootdir,var))
+        print(type(nuisfiles["exp"]))
+    dirmap = {"SignalRegion":"sr","DoubleEleCR":"ze","DoubleMuCR":"zm","SingleEleCR":"we","SingleMuCR":"wm","GammaCR":"ga"}
+    def getExperiment():
+        tfile = nuisfiles["exp"]
+        print(type(tfile))
+        
+        tdir = tfile.GetDirectory(dirmap[self.region])
+        name = "%s_%s_%s"%(self.name,self.variable.base,nuisance)
+        up = self.histo.Clone("%sUp"%name)
+        dn = self.histo.Clone("%sDown"%name)
+        if not any(self.process in procs.GetName() for procs in tdir.GetListOfKeys() ):
+            return up,dn
+        upsf = tdir.Get("%s_%sUp"%(self.process,nuisance.replace("EXP_","")))
+        dnsf = tdir.Get("%s_%sDown"%(self.process,nuisance.replace("EXP_","")))
+        #print("---------")
+        #print("%s_%sUp"%(self.process,nuisance.replace("THEORY_","")))
+        #print("%s_%sDown"%(self.process,nuisance.replace("THEORY_","")))
+        #print(type(upsf))
+        #print(type(dnsf))
+        #print("---------")
+        up.Multiply(upsf)
+        dn.Multiply(dnsf)
+        return up,dn
+    up,dn = getExperiment()
+    self.nuisances[nuisance] = Nuisance(self.process,nuisance,up,dn,self.histo,type="abs")
+    #print("get exp nuisance name= %s"%self.nuisances[nuisance].name)
+    return self.nuisances[nuisance]
 def MakeDiff(self):
     nbins = self.norm.GetNbinsX()
     for ibin in range(1,nbins+1):

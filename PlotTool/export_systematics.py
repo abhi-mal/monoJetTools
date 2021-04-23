@@ -2,7 +2,7 @@
 
 """
 Export systematics shape for quick systematics bands in data/mc plots
-Usage: python PlotTool/export_systematics.py variable output_lnN_file.root output_theory_file.root
+Usage: python PlotTool/export_systematics.py variable output_lnN_file.root output_theory_file.root output_exp_file.root
 """
 
 from PlotTool import *
@@ -21,6 +21,7 @@ parser.parse_args()
 variable = parser.args.argv[0]
 output_lnN = TFile(parser.args.argv[1],"recreate")
 output_theory = TFile(parser.args.argv[2],"recreate")
+output_exp = TFile(parser.args.argv[3],"recreate")
 rmap = {"SignalRegion":"sr"}#,"SingleEleCR":"we","SingleMuCR":"wm","DoubleEleCR":"ze","DoubleMuCR":"zm","GammaCR":"ga"}
 #regions = { rmap[region]:Region(path=region,autovar=0,show=False) for region in rmap }
 regions = { rmap[region]:Region(autovar=True) for region in rmap }
@@ -147,12 +148,14 @@ lnNlist = [
 allbkg = ["ZJets","WJets","DYJets","GJets","TTJets","DiBoson","QCD"] #majorbkg = ["ZJets","DYJets","WJets","GJets"] adding all backgrounds
 # shapeList = ["PSW_isrCon","PSW_fsrCon"]
 shapeList = ["QCD_Scale","QCD_Shape","QCD_Proc","QCD_EWK_Mix","NNLO_Miss","NNLO_Sud","NNLO_EWK"]
+shapeList_exp = ["JES","JER"]
 
-def export_region(region,output_lnN,output_theory):
+def export_region(region,output_lnN,output_theory,output_exp):
     print "Exporting",region.region
     region.initiate(variable)
     tdir_lnN_file = output_lnN.mkdir(rmap[region.region])#; tdir.cd()
     tdir_theory_file = output_theory.mkdir(rmap[region.region])#; tdir.cd()
+    tdir_exp_file = output_exp.mkdir(rmap[region.region])
     def export_process(process):
         print "\tExporting",process.name
         unclist = []
@@ -187,10 +190,24 @@ def export_region(region,output_lnN,output_theory):
                 up.Write()
                 dn.Write()
 
+            for shape in shapeList_exp:
+                #print("****")
+                #print(process.process)
+                #print("****")
+                process.addUnc(shape)
+                unclist.append(shape)
+
+                up = process.nuisances[shape].up.Clone("%s_%sUp"%(process.process,shape))
+                dn = process.nuisances[shape].dn.Clone("%s_%sDown"%(process.process,shape))
+
+                tdir_exp_file.cd()
+                up.Write()
+                dn.Write()         
+
     for process in region:
         if process.proctype != "bkg": continue
         export_process(process)
 
-for region in regions.values(): export_region(region,output_lnN,output_theory) 
+for region in regions.values(): export_region(region,output_lnN,output_theory,output_exp) 
             
 

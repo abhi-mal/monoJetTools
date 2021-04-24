@@ -36,7 +36,7 @@ void monoJetClass::Loop(Long64_t maxEvents, int reportEvery) {
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
 
-    if (isData && event%5 != 0) continue;
+//    if (isData && event%5 != 0) continue; full unblinding
 
     if (jentry%reportEvery == 0){
       cout<<"Analyzing entry "<<jentry<<"/"<<(nentriesToCheck)<<endl;

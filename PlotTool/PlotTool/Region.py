@@ -204,6 +204,7 @@ class Region(object):
         else:
             for signal in self.signalinfo.XsecMap:
                 if hasattr(signal_args,signal) and getattr(signal_args,signal) is not None:
+                    print(signal)
                     signal_to_plot = None
                     args = getattr(signal_args,signal)
                     if "-1" in args: signalmap.update(self.signalinfo.XsecMap[signal])
@@ -216,13 +217,21 @@ class Region(object):
                         fname = self.signalinfo.DefaultMap[signal]
                         xsec = self.signalinfo.XsecMap[signal][fname]
                         signalmap[fname] = (xsec,signal)
-                    if signal_to_plot is None: signal_to_plot = self.signalinfo.DefaultMap[signal]
-                    self.SignalToPlot.append(signal_to_plot)
-        for fname,(xsec,sigtype) in signalmap.iteritems():
+#                    if signal_to_plot is None: signal_to_plot = self.signalinfo.DefaultMap[signal]
+#                    self.SignalToPlot.append(signal_to_plot)
+                    for signal_to_plot in signalmap.keys():
+                        self.SignalToPlot.append(signal_to_plot)
+                    print(self.SignalToPlot)
+                    print(len(self.SignalToPlot))
+                    raw_input()
+#        for fname,(xsec,sigtype) in signalmap.iteritems():
+        for fname,xsec in signalmap.iteritems():
+            sigtype = "dmsimp_scalar"
             signal = fname.strip('post')
-            if fname in self.SignalToPlot: self.SignalToPlot[self.SignalToPlot.index(fname)] = signal
+            if fname in self.SignalToPlot: self.SignalToPlot[self.SignalToPlot.index(fname)] = signal;print("Got it")
             self.SignalList.append(signal)
             xsecmap = {fname:xsec}
+            print(signal)
             self.processes[signal] = Process(signal,[fname],xsecmap,'signal',year=self.year,region=self.region,leg=self.signalinfo.LegMap[sigtype])
             self.SampleList.insert(1,signal)
     def open(self):

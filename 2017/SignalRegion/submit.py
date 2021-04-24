@@ -12,7 +12,8 @@ options['parallel'] = False
 options['batchsize'] = 150
 # options['submit'] = False
 #----Submit---#
-submit('met',filelist=True)
-for signal in signalist: submit(signal,split=1)
-for mc in mclist: submit(mc)
-
+#submit('met',filelist=True)
+#for signal in signalist: submit(signal,split=1)
+#for mc in mclist: submit(mc)
+#submit("gjets_nlo")
+submit('dmsimp_scalar',label='dmsimp_Scalar-')

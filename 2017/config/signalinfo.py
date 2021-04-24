@@ -5,12 +5,14 @@ DefaultMap = {
 
 LegMap = {
     "axial":"Axial-Vector",
-    "zprime":"Mono-Z'"
+    "zprime":"Mono-Z'",
+    "dmsimp_scalar":"dmsimp_scalar"
 }
 
 GetFileMap = {
     "axial":lambda mchi,mphi:"postAxial_Mchi%s_Mphi%s" % (mchi,mphi),
-    "zprime":lambda mx,mv:"postZprime_Mx%s_Mv%s" % (mx,mv)
+    "zprime":lambda mx,mv:"postZprime_Mx%s_Mv%s" % (mx,mv),
+    "dmsimp_scalar": lambda mchi,mphi:"postdmsimp_Scalar-Mchi%s_Mphi%s"%(mchi,mphi)
 }
 
 XsecMap = {
@@ -89,5 +91,32 @@ XsecMap = {
         "postZprime_Mx50_Mv300":3.635900E-02,
         "postZprime_Mx50_Mv50":2.599700E-02,
         "postZprime_Mx50_Mv95":2.556500E-02,
+    },
+    "dmsimp_scalar":{
+        "postdmsimp_Scalar-Mchi150_Mphi500" : 0.1543,
+        "postdmsimp_Scalar-Mchi1_Mphi100"   : 1.464,
+        "postdmsimp_Scalar-Mchi1_Mphi10"    : 2.183,
+        "postdmsimp_Scalar-Mchi1_Mphi200"   : 0.8415,
+        "postdmsimp_Scalar-Mchi1_Mphi300"   : 0.5766,
+        "postdmsimp_Scalar-Mchi1_Mphi350"   : 0.5731,
+        "postdmsimp_Scalar-Mchi1_Mphi400"   : 0.4599,
+        "postdmsimp_Scalar-Mchi1_Mphi450"   : 0.3114,
+        "postdmsimp_Scalar-Mchi1_Mphi500"   : 0.2064,
+        "postdmsimp_Scalar-Mchi1_Mphi50"    : 1.901,
+        "postdmsimp_Scalar-Mchi1_Mphi600"   : 0.09364,
+        "postdmsimp_Scalar-Mchi1_Mphi700"   : 0.04571,
+        "postdmsimp_Scalar-Mchi1_Mphi800"   : 0.02372,
+        "postdmsimp_Scalar-Mchi200_Mphi500" : 0.09118,
+        "postdmsimp_Scalar-Mchi20_Mphi50"   : 1.939,
+        "postdmsimp_Scalar-Mchi225_Mphi500" : 0.04418,
+        "postdmsimp_Scalar-Mchi22_Mphi50"   : 1.944,
+        "postdmsimp_Scalar-Mchi275_Mphi500" : 0.001084,
+        "postdmsimp_Scalar-Mchi28_Mphi50"   : 0.05681,
+        "postdmsimp_Scalar-Mchi40_Mphi100"  : 1.494,
+        "postdmsimp_Scalar-Mchi45_Mphi100"  : 1.503,
+        "postdmsimp_Scalar-Mchi4_Mphi10"    : 2.205,
+        "postdmsimp_Scalar-Mchi50_Mphi500"  : 0.2016,
+        "postdmsimp_Scalar-Mchi55_Mphi100"  : 0.03114,
+        "postdmsimp_Scalar-Mchi6_Mphi10"    : 0.1283
     }
 }

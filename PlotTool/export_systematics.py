@@ -22,9 +22,9 @@ variable = parser.args.argv[0]
 output_lnN = TFile(parser.args.argv[1],"recreate")
 output_theory = TFile(parser.args.argv[2],"recreate")
 output_exp = TFile(parser.args.argv[3],"recreate")
-rmap = {"SignalRegion":"sr"}#,"SingleEleCR":"we","SingleMuCR":"wm","DoubleEleCR":"ze","DoubleMuCR":"zm","GammaCR":"ga"}
+rmap = {"SignalRegion":"sr","SingleEleCR":"we","SingleMuCR":"wm","DoubleEleCR":"ze","DoubleMuCR":"zm","GammaCR":"ga"}
 #regions = { rmap[region]:Region(path=region,autovar=0,show=False) for region in rmap }
-regions = { rmap[region]:Region(autovar=True) for region in rmap }
+regions = { rmap[region]:Region(path=region,autovar=True) for region in rmap }
 class lnN:
     def __init__(self,name,valuemap):
         self.name = name
@@ -204,8 +204,39 @@ def export_region(region,output_lnN,output_theory,output_exp):
                 up.Write()
                 dn.Write()         
 
+        elif 'dmsimp' in process.process :# for the signal processes 
+            for shape in shapeList:
+                #print("****")
+                #print(process.process)
+                #print("****")
+                process.addUnc(shape)
+                unclist.append(shape)
+        
+                up = process.nuisances[shape].up.Clone("%s_%sUp"%(process.process,shape))
+                dn = process.nuisances[shape].dn.Clone("%s_%sDown"%(process.process,shape))
+                
+                tdir_theory_file.cd()
+                up.Write()
+                dn.Write()
+
+            for shape in shapeList_exp:
+                #print("****")
+                #print(process.process)
+                #print("****")
+                process.addUnc(shape)
+                unclist.append(shape)
+
+                up = process.nuisances[shape].up.Clone("%s_%sUp"%(process.process,shape))
+                dn = process.nuisances[shape].dn.Clone("%s_%sDown"%(process.process,shape))
+
+                tdir_exp_file.cd()
+                up.Write()
+                dn.Write()         
+
     for process in region:
-        if process.proctype != "bkg": continue
+        print(process.process)
+#        if process.proctype != "bkg": continu # exporting systematics for signal processed also
+        if process.proctype == "data": continue
         export_process(process)
 
 for region in regions.values(): export_region(region,output_lnN,output_theory,output_exp) 

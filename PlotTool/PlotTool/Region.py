@@ -223,7 +223,7 @@ class Region(object):
                         self.SignalToPlot.append(signal_to_plot)
                     print(self.SignalToPlot)
                     print(len(self.SignalToPlot))
-                    raw_input()
+                    #raw_input()
 #        for fname,(xsec,sigtype) in signalmap.iteritems():
         for fname,xsec in signalmap.iteritems():
             sigtype = "dmsimp_scalar"

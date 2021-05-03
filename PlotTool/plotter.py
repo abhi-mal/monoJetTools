@@ -208,13 +208,13 @@ def plotVariable(samples,variable,initiate=True,blinded=False):
             UncBandStyle(theoryband,9)
             bandlist.append(theoryband) 
             
-            exp_sys = ["JER","JES"]
+            exp_sys = ["JER","JES"] + ['btag_sf','prefiring','eleveto_sf','muveto_sf','tauveto_sf']
             exp_sys = ["EXP_" + s for s in exp_sys]
             print(exp_sys)
             unclist = unclist + exp_sys
             print(unclist)
             expband = samples.getUncBand(unclist)
-            expband.label = bandlist[-1].label + " #otimes JEC"
+            expband.label = bandlist[-1].label + " #otimes exp_sys"
             UncBandStyle(expband,30)
             bandlist.append(expband)
             

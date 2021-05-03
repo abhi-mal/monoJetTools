@@ -18,7 +18,7 @@ group = parser.add_group(__file__,__doc__,"Script")
 
 dirlist = ["SignalRegion","SingleEleCR","SingleMuCR","DoubleEleCR","DoubleMuCR","GammaCR"]
 dirmap = {"SignalRegion":"signal","DoubleEleCR":"Zee","DoubleMuCR":"Zmm","SingleEleCR":"Wen","SingleMuCR":"Wmn","GammaCR":"gjets"}
-procmap = {"Data":"data","ZJets":"zjets","WJets":"wjets","DYJets":"zll","GJets":"gjets","TTJets":"top","DiBoson":"diboson","QCD":"qcd","QCDFake":"qcd"}
+procmap = {"Data":"data","ZJets":"ZJets","WJets":"WJets","DYJets":"DYJets","GJets":"GJets","TTJets":"TTJets","DiBoson":"DiBoson","QCD":"QCD","QCDFake":"qcd"}# Changing the name tags to match those created by export_systematics.py
 signalmap = {"Axial":"axial","Zprime":"zprime","dmsimp_scalar":"dmsimp_scalar"}
 if not path.isdir("Systematics"): mkdir("Systematics")
 
@@ -30,7 +30,7 @@ def SaveRegion(region,save):
     region = Region(path=region,show=False,autovar=True)
     region.initiate(variable)
     print(region.variable.nuisances)
-    raw_input()
+    #raw_input()
     
     if save.tfile is None: save.tfile = TFile("Systematics/%s_%s.sys.root" % (region.varname,region.year),'recreate')
     output = save.tfile
@@ -53,7 +53,7 @@ def SaveRegion(region,save):
     sumofbkg.Write()
 
     theory_sys = ["NNLO_EWK","NNLO_Sud","NNLO_Miss"] + ["QCD_Scale","QCD_Proc","QCD_Shape","QCD_EWK_Mix"]
-    exp_sys = ["JER","JES"]
+    exp_sys = ["JER","JES"] + ['btag_sf','prefiring','eleveto_sf','muveto_sf','tauveto_sf']
     #["lnn_sys"] not needed as added directly in datacard, but btagging some vetos, prefiring are not included! FIXM
     
     for process in region:
@@ -63,7 +63,7 @@ def SaveRegion(region,save):
             print(process.process)
             sigproc = next( signalmap[signal] for signal in signalmap if signal in process.process )
 #            export = "%s_%s" % (dirmap[region.region],sigproc) -- for only 1 mass point
-            my_sig_tag = process.process.replace("Axial","")
+            my_sig_tag = process.process.replace("Axial","").replace("dmsimp_scalar","",1)
             export = "%s_%s%s" % (dirmap[region.region],sigproc,my_sig_tag)
             
         else: export = "%s_%s" % (dirmap[region.region],procmap[process.process])
@@ -78,7 +78,7 @@ def SaveRegion(region,save):
 #                 #cwd.cd()
                  nuisance = nuisance.replace("THEORY_","").replace("EXP_","")
                  if nuisance in process.nuisances:
-                     print("in nuisance loop");print(nuisance);raw_input()
+                     print("in nuisance loop");print(nuisance)#;raw_input()
                      up,dn = process.nuisances[nuisance].GetHistos()
                      if not validShape(up,dn): print("not valid");continue
                      print "----Writing",process.nuisances[nuisance]

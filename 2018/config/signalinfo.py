@@ -5,12 +5,14 @@ DefaultMap = {
 
 LegMap = {
     "axial":"Axial-Vector",
-    "zprime":"Mono-Z'"
+    "zprime":"Mono-Z'",
+    "dmsimp_scalar":"dmsimp_scalar"
 }
 
 GetFileMap = {
     "axial":lambda mchi,mphi:"postAxial_Mchi%s_Mphi%s" % (mchi,mphi),
-    "zprime":lambda mx,mv:"postZprime_Mx%s_Mv%s" % (mx,mv)
+    "zprime":lambda mx,mv:"postZprime_Mx%s_Mv%s" % (mx,mv),
+    "dmsimp_scalar": lambda mchi,mphi:"postdmsimp_scalar_Mchi%s_Mphi%s"%(mchi,mphi)
 }
 
 XsecMap = {
@@ -89,5 +91,32 @@ XsecMap = {
         "postZprime_Mx50_Mv300":3.635900E-02,
         "postZprime_Mx50_Mv50":2.599700E-02,
         "postZprime_Mx50_Mv95":2.556500E-02,
+    },
+    "dmsimp_scalar":{
+        "postdmsimp_scalar_Mchi1_Mphi10"    :2.18,
+        "postdmsimp_scalar_Mchi4_Mphi10"    :2.219,
+        "postdmsimp_scalar_Mchi6_Mphi10"    :0.1281,
+        "postdmsimp_scalar_Mchi1_Mphi50"    :1.906,
+        "postdmsimp_scalar_Mchi20_Mphi50"   :1.939,
+        "postdmsimp_scalar_Mchi22_Mphi50"   :1.944,
+        "postdmsimp_scalar_Mchi28_Mphi50"   :0.0568,
+        "postdmsimp_scalar_Mchi1_Mphi100"   :1.464,
+        "postdmsimp_scalar_Mchi40_Mphi100"  :1.495,
+        "postdmsimp_scalar_Mchi45_Mphi100"  :1.502,
+        "postdmsimp_scalar_Mchi55_Mphi100"  :0.03112, 
+        "postdmsimp_scalar_Mchi1_Mphi200"   :0.8414,
+        "postdmsimp_scalar_Mchi1_Mphi300"   :0.5772,
+        "postdmsimp_scalar_Mchi1_Mphi350"   :0.5714,
+        "postdmsimp_scalar_Mchi1_Mphi400"   :0.4597,
+        "postdmsimp_scalar_Mchi1_Mphi450"   :0.3122,
+        "postdmsimp_scalar_Mchi1_Mphi500"   :0.2063,
+        "postdmsimp_scalar_Mchi50_Mphi500"  :0.2014,     
+        "postdmsimp_scalar_Mchi150_Mphi500" :0.1544,
+        "postdmsimp_scalar_Mchi200_Mphi500" :0.09115,
+        "postdmsimp_scalar_Mchi225_Mphi500" ;0.04421,
+        "postdmsimp_scalar_Mchi275_Mphi500" :0.001085, 
+        "postdmsimp_scalar_Mchi1_Mphi600"   :0.09376,
+        "postdmsimp_scalar_Mchi1_Mphi700"   :0.04561,
+        "postdmsimp_scalar_Mchi1_Mphi800"   :0.02371
     }
 }

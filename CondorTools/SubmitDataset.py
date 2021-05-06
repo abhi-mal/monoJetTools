@@ -6,12 +6,12 @@ from dataset import getDataset
 from argparse import ArgumentParser,ArgumentTypeError
 labelmap = {
     'met':'METdata_','egamma':'EGdata_','singleele':'SEdata_','singlepho':'SPdata_',
-    'zprime':'Zprime_','axial':'Axial_',
+    'zprime':'Zprime_','axial':'Axial_','dmsimp_scalar':'dmsimp_scalar_',
     'zjets':'Z','wjets':'W','dyjets':'DY','gjets':'GJets',
     'zjets_nlo':'Z-NLO','wjets_nlo':'W-NLO','dyjets_nlo':'DY-NLO','gjets_nlo':'G-NLO',
     'ewk':'','qcd':'QCD','st':'ST_','ttjets':'TTJets',
 }
-mclist = ['dyjets_nlo','dyjets','ewk','gjets','qcd','st','ttjets','wjets_nlo','wjets','zjets_nlo','zjets']
+mclist = ['dyjets_nlo','dyjets','ewk','gjets','gjets_nlo','qcd','st','ttjets','wjets_nlo','wjets','zjets_nlo','zjets']
 datalist = ['met','egamma','singleele','singlepho']
 signalist = ['axial']
 full_list = mclist + datalist + signalist

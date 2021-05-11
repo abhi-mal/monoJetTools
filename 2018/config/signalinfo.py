@@ -113,7 +113,7 @@ XsecMap = {
         "postdmsimp_scalar_Mchi50_Mphi500"  :0.2014,     
         "postdmsimp_scalar_Mchi150_Mphi500" :0.1544,
         "postdmsimp_scalar_Mchi200_Mphi500" :0.09115,
-        "postdmsimp_scalar_Mchi225_Mphi500" ;0.04421,
+        "postdmsimp_scalar_Mchi225_Mphi500" :0.04421,
         "postdmsimp_scalar_Mchi275_Mphi500" :0.001085, 
         "postdmsimp_scalar_Mchi1_Mphi600"   :0.09376,
         "postdmsimp_scalar_Mchi1_Mphi700"   :0.04561,

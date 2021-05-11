@@ -39,6 +39,8 @@ class lnN:
           name = name % year
         if helper(region,value): value = helper(region,value)
         if helper(proc,value): value = helper(proc,value)
+        elif "axial" in proc : pass 
+        elif "dmsimp_scalar" in proc : value = helper("dmsimp_scalar",value)
         if type(value) is not float: return None,None
         return name,value
 lnNlist = [
@@ -134,6 +136,7 @@ lnNlist = [
             "we":{("GJets","DiBoson","DYJets","TTJets","QCD"):1.04},
             "wm":{("DYJets","TTJets","DiBoson","QCD"):1.04}}}),
     lnN("axial_Norm13TeV",{"sr":{"axial":1.05}}),
+    lnN("dmsimp_scalar_Norm13TeV",{"sr":{"dmsimp_scalar":1.05}}),
     lnN("ggh_Norm13TeV",{"sr":{"ggh":1.05}}),
     lnN("vbf_Norm13TeV",{"sr":{"vbf":1.05}}),
     lnN("wh_Norm13TeV",{"sr":{"wh":1.05}}),
@@ -148,7 +151,8 @@ lnNlist = [
 allbkg = ["ZJets","WJets","DYJets","GJets","TTJets","DiBoson","QCD"] #majorbkg = ["ZJets","DYJets","WJets","GJets"] adding all backgrounds
 # shapeList = ["PSW_isrCon","PSW_fsrCon"]
 scaleList_theory = ["QCD_Scale","QCD_Shape","QCD_Proc","QCD_EWK_Mix","NNLO_Miss","NNLO_Sud","NNLO_EWK"]
-scaleList_exp = ['btag_sf','prefiring','eleveto_sf','muveto_sf','tauveto_sf']
+scaleList_exp = ['btag_sf','prefiring','eleveto_sf','muveto_sf','tauveto_sf']#2017
+scaleList_exp = ['btag_sf','eleveto_sf','muveto_sf','tauveto_sf']#2018-no prefiring
 shapeList_exp = ["JES","JER"]
 
 def export_region(region,output_lnN,output_scale_theory,output_shape_exp,output_scale_exp):

@@ -23,6 +23,7 @@ output_scale_theory = TFile(parser.args.argv[2],"recreate")
 output_shape_exp = TFile(parser.args.argv[3],"recreate")
 output_scale_exp = TFile(parser.args.argv[4],"recreate")
 rmap = {"SignalRegion":"sr","SingleEleCR":"we","SingleMuCR":"wm","DoubleEleCR":"ze","DoubleMuCR":"zm","GammaCR":"ga"}
+#rmap = {"SignalRegion":"sr"}
 #regions = { rmap[region]:Region(path=region,autovar=0,show=False) for region in rmap }
 regions = { rmap[region]:Region(path=region,autovar=True) for region in rmap }
 class lnN:
@@ -41,6 +42,11 @@ class lnN:
         if helper(proc,value): value = helper(proc,value)
         elif "axial" in proc : pass 
         elif "dmsimp_scalar" in proc : value = helper("dmsimp_scalar",value)
+        elif "dmsimp_pseudoscalar" in proc : value = helper("dmsimp_pseudoscalar",value)
+        elif "dmsimp_tchannel_0or1" in proc : value = helper("dmsimp_tchannel_0or1",value)
+        elif "dmsimp_tchannel_2" in proc : value = helper("dmsimp_tchannel_2",value)
+        elif "ADD" in proc : value = helper("ADD",value)
+        elif "leptoquark" in proc : value = helper("leptoquark",value)
         if type(value) is not float: return None,None
         return name,value
 lnNlist = [
@@ -137,6 +143,11 @@ lnNlist = [
             "wm":{("DYJets","TTJets","DiBoson","QCD"):1.04}}}),
     lnN("axial_Norm13TeV",{"sr":{"axial":1.05}}),
     lnN("dmsimp_scalar_Norm13TeV",{"sr":{"dmsimp_scalar":1.05}}),
+    lnN("dmsimp_pseudoscalar_Norm13TeV",{"sr":{"dmsimp_pseudoscalar":1.05}}),
+    lnN("dmsimp_tchannel_0or1_Norm13TeV",{"sr":{"dmsimp_tchannel_0or1":1.05}}),
+    lnN("dmsimp_tchannel_2_Norm13TeV",{"sr":{"dmsimp_tchannel_2":1.05}}),
+    lnN("ADD_Norm13TeV",{"sr":{"ADD":1.05}}),
+    lnN("leptoquark_Norm13TeV",{"sr":{"leptoquark":1.05}}),
     lnN("ggh_Norm13TeV",{"sr":{"ggh":1.05}}),
     lnN("vbf_Norm13TeV",{"sr":{"vbf":1.05}}),
     lnN("wh_Norm13TeV",{"sr":{"wh":1.05}}),
@@ -152,7 +163,7 @@ allbkg = ["ZJets","WJets","DYJets","GJets","TTJets","DiBoson","QCD"] #majorbkg =
 # shapeList = ["PSW_isrCon","PSW_fsrCon"]
 scaleList_theory = ["QCD_Scale","QCD_Shape","QCD_Proc","QCD_EWK_Mix","NNLO_Miss","NNLO_Sud","NNLO_EWK"]
 scaleList_exp = ['btag_sf','prefiring','eleveto_sf','muveto_sf','tauveto_sf']#2017
-scaleList_exp = ['btag_sf','eleveto_sf','muveto_sf','tauveto_sf']#2018-no prefiring
+#scaleList_exp = ['btag_sf','eleveto_sf','muveto_sf','tauveto_sf']#2018-no prefiring
 shapeList_exp = ["JES","JER"]
 
 def export_region(region,output_lnN,output_scale_theory,output_shape_exp,output_scale_exp):
@@ -225,7 +236,7 @@ def export_region(region,output_lnN,output_scale_theory,output_shape_exp,output_
                 dn.Write()
 
 
-        elif 'dmsimp' in process.process :# for the signal processes 
+        elif ('dmsimp' in process.process) or ('ADD' in process.process) or ('leptoquark' in process.process) :# for the signal processes 
             for shape in scaleList_theory:
                 #print("****")
                 #print(process.process)

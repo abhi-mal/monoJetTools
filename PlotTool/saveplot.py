@@ -18,8 +18,8 @@ group = parser.add_group(__file__,__doc__,"Script")
 
 dirlist = ["SignalRegion","SingleEleCR","SingleMuCR","DoubleEleCR","DoubleMuCR","GammaCR"]
 dirmap = {"SignalRegion":"signal","DoubleEleCR":"Zee","DoubleMuCR":"Zmm","SingleEleCR":"Wen","SingleMuCR":"Wmn","GammaCR":"gjets"}
-procmap = {"Data":"data","ZJets":"ZJets","WJets":"WJets","DYJets":"DYJets","GJets":"GJets","TTJets":"TTJets","DiBoson":"DiBoson","QCD":"QCD","QCDFake":"qcd"}# Changing the name tags to match those created by export_systematics.py
-signalmap = {"Axial":"axial","Zprime":"zprime","dmsimp_scalar":"dmsimp_scalar"}
+procmap = {"Data":"data","ZJets":"ZJets","WJets":"WJets","DYJets":"DYJets","GJets":"GJets","TTJets":"TTJets","DiBoson":"DiBoson","QCD":"QCD","QCDFake":"QCDFake"}# Changing the name tags to match those created by export_systematics.py
+signalmap = {"Axial":"axial","Zprime":"zprime","dmsimp_scalar":"dmsimp_scalar","dmsimp_pseudoscalar":"dmsimp_pseudoscalar","dmsimp_tchannel_0or1":"dmsimp_tchannel_0or1","dmsimp_tchannel_2":"dmsimp_tchannel_2","ADD":"ADD","leptoquark":"leptoquark"}
 if not path.isdir("Systematics"): mkdir("Systematics")
 
 def validHisto(hs,total=0,threshold=0.2):return hs.Integral() > threshold*total
@@ -53,7 +53,8 @@ def SaveRegion(region,save):
     sumofbkg.Write()
 
     theory_sys = ["NNLO_EWK","NNLO_Sud","NNLO_Miss"] + ["QCD_Scale","QCD_Proc","QCD_Shape","QCD_EWK_Mix"]
-    exp_sys = ["JER","JES"] + ['btag_sf','prefiring','eleveto_sf','muveto_sf','tauveto_sf']
+    exp_sys = ["JER","JES"] + ['btag_sf','prefiring','eleveto_sf','muveto_sf','tauveto_sf']#2017
+    #exp_sys = ["JER","JES"] + ['btag_sf','eleveto_sf','muveto_sf','tauveto_sf']#2018-no prefiring
     #["lnn_sys"] not needed as added directly in datacard, but btagging some vetos, prefiring are not included! FIXM
     
     for process in region:
@@ -63,7 +64,8 @@ def SaveRegion(region,save):
             print(process.process)
             sigproc = next( signalmap[signal] for signal in signalmap if signal in process.process )
 #            export = "%s_%s" % (dirmap[region.region],sigproc) -- for only 1 mass point
-            my_sig_tag = process.process.replace("Axial","").replace("dmsimp_scalar","",1)
+            for sig_name in signalmap.keys():
+               my_sig_tag = process.process.replace(sig_name,"",1)
             export = "%s_%s%s" % (dirmap[region.region],sigproc,my_sig_tag)
             
         else: export = "%s_%s" % (dirmap[region.region],procmap[process.process])
@@ -73,7 +75,7 @@ def SaveRegion(region,save):
         for nuisance in region.variable.nuisances:
                  if nuisance in theory_sys : nuisance= "THEORY_" + nuisance
                  elif nuisance in exp_sys  : nuisance= "EXP_" + nuisance
-                 process.addUnc(nuisance)
+                 print(nuisance);process.addUnc(nuisance)
                  output.cd()
 #                 #cwd.cd()
                  nuisance = nuisance.replace("THEORY_","").replace("EXP_","")

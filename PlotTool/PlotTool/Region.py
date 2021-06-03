@@ -226,9 +226,10 @@ class Region(object):
                     #raw_input()
 #        for fname,(xsec,sigtype) in signalmap.iteritems():
         for fname,xsec in signalmap.iteritems():
-            sigtype = "dmsimp_scalar"
+            sigtype_list = ["leptoquark","ADD","dmsimp_tchannel_2","dmsimp_tchannel_0or1","dmsimp_pseudoscalar","dmsimp_scalar"]
+            sigtype = sigtype_list[0]
             signal = fname.strip('post')
-            if fname in self.SignalToPlot: self.SignalToPlot[self.SignalToPlot.index(fname)] = signal;print("Got it")
+            if fname in self.SignalToPlot: self.SignalToPlot[self.SignalToPlot.index(fname)] = signal
             self.SignalList.append(signal)
             xsecmap = {fname:xsec}
             print(signal)

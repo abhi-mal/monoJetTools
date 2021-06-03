@@ -6,7 +6,7 @@ from dataset import getDataset
 from argparse import ArgumentParser,ArgumentTypeError
 labelmap = {
     'met':'METdata_','egamma':'EGdata_','singleele':'SEdata_','singlepho':'SPdata_',
-    'zprime':'Zprime_','axial':'Axial_','dmsimp_scalar':'dmsimp_scalar_',
+    'zprime':'Zprime_','axial':'Axial_','dmsimp_scalar':'dmsimp_scalar_','dmsimp_pseudoscalar':'dmsimp_pseudoscalar_','dmsimp_tchannel_0or1_onshellmediator':'dmsimp_tchannel_0or1_','dmsimp_tchannel_2_onshellmediators':'dmsimp_tchannel_2_','ADD':'ADD_','leptoquark':'leptoquark_',
     'zjets':'Z','wjets':'W','dyjets':'DY','gjets':'GJets',
     'zjets_nlo':'Z-NLO','wjets_nlo':'W-NLO','dyjets_nlo':'DY-NLO','gjets_nlo':'G-NLO',
     'ewk':'','qcd':'QCD','st':'ST_','ttjets':'TTJets',
